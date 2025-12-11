@@ -25,7 +25,7 @@ pipeline {
         
         stage('Deploy to K8s') {
             steps {
-                withCredentials([file(credentialsId: 'oracledev-kubeconfig', variable: 'KUBECONFIG')]) {
+                withCredentials([file(credentialsId: 'oci-kubeconfig', variable: 'KUBECONFIG')]) {
                     script {
                         echo "☸️ Deploying to Kubernetes..."
                         
