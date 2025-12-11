@@ -34,9 +34,9 @@ pipeline {
                             kubectl get namespace webmail || kubectl create namespace webmail
                         '''
                         
-                        // Apply manifests
+                        // Apply manifests (only yaml files)
                         sh '''
-                            kubectl apply -f k8s/
+                            kubectl apply -f k8s/deployment.yaml
                         '''
                         
                         // Wait for rollout
