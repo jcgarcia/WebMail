@@ -1,0 +1,89 @@
+# SnappyMail WebMail - Kubernetes Deployment
+# Namespace: webmail
+# URL: mail.ingasti.com
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: webmail
+  labels:
+    app.kubernetes.io/name: webmail
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: snappymail-data
+  namespace: webmail
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 256Mi
+  storageClassName: local-path
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snappymail
+  namespace: webmail
+  labels:
+    app: snappymail
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: snappymail
+  template:
+    metadata:
+      labels:
+        app: snappymail
+    spec:
+      containers:
+      - name: snappymail
+        image: djmaze/snappymail:latest
+        ports:
+        - containerPort: 8888
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/snappymail
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8888
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8888
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: snappymail-data
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: snappymail
+  namespace: webmail
+spec:
+  type: ClusterIP
+  selector:
+    app: snappymail
+  ports:
+    - port: 80
+      targetPort: 8888
