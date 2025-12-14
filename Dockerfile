@@ -23,36 +23,26 @@ LABEL org.label-schema.description="SnappyMail WebMail (Ingasti Custom) using ng
 # Install runtime dependencies
 RUN apk add --no-cache ca-certificates nginx supervisor bash
 
-# Install essential PHP extensions for SnappyMail (minimal set to reduce build time)
+# Install all PHP extensions in single compilation stage for efficiency
 RUN set -eux; \
-    apk add --no-cache --virtual .build-dependencies $PHPIZE_DEPS; \
+    \
+    apk add --no-cache freetype libjpeg-turbo libpng libzip postgresql-libs; \
+    \
+    apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+        freetype-dev libjpeg-turbo-dev libpng-dev \
+        libzip-dev postgresql-dev; \
+    \
     pecl install apcu; \
     docker-php-ext-enable apcu; \
-    docker-php-source delete; \
-    apk del .build-dependencies;
-
-# GD for image handling
-RUN set -eux; \
-    apk add --no-cache freetype libjpeg-turbo libpng; \
-    apk add --no-cache --virtual .deps freetype-dev libjpeg-turbo-dev libpng-dev; \
+    \
     docker-php-ext-configure gd --with-freetype --with-jpeg; \
     docker-php-ext-install gd; \
-    apk del .deps
-
-# Core extensions (opcache without JIT to speed up build on ARM64)
-RUN set -eux; \
-    apk add --no-cache libzip; \
-    apk add --no-cache --virtual .deps libzip-dev; \
+    \
     docker-php-ext-configure opcache --disable-opcache-jit; \
-    docker-php-ext-install pdo_mysql opcache zip; \
-    apk del .deps
-
-# PostgreSQL support
-RUN set -eux; \
-    apk add --no-cache postgresql-libs; \
-    apk add --no-cache --virtual .deps postgresql-dev; \
-    docker-php-ext-install pdo_pgsql; \
-    apk del .deps
+    docker-php-ext-install pdo_mysql opcache zip pdo_pgsql; \
+    \
+    docker-php-source delete; \
+    apk del .build-deps
 
 # Copy customized SnappyMail from customizer stage
 COPY --chown=www-data:www-data --from=customizer /tmp/snappymail /snappymail
