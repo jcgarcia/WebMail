@@ -38,8 +38,7 @@ RUN set -eux; \
     docker-php-ext-configure gd --with-freetype --with-jpeg; \
     docker-php-ext-install gd; \
     \
-    docker-php-ext-configure opcache --disable-opcache-jit; \
-    docker-php-ext-install pdo_mysql opcache zip pdo_pgsql; \
+    docker-php-ext-install pdo_mysql zip pdo_pgsql; \
     \
     docker-php-source delete; \
     apk del .build-deps
