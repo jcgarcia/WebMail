@@ -15,8 +15,8 @@ RUN wget -q https://github.com/the-djmaze/snappymail/releases/download/v2.38.2/s
 COPY branding/logo.png /tmp/snappymail/assets/logo.png
 RUN find /tmp/snappymail -name "*.css" -type f -exec sed -i 's/#ffffff/#fefefe/g' {} \;
 
-# Create final image from official PHP base
-FROM php:8.2-fpm-alpine
+# Create final image from official PHP base (Alpine 3.21 for postgresql-libs support)
+FROM php:8.2-fpm-alpine3.21
 
 LABEL org.label-schema.description="SnappyMail WebMail (Ingasti Custom) using nginx, php-fpm on Alpine"
 
@@ -47,7 +47,7 @@ RUN set -eux; \
     docker-php-ext-install pdo_mysql opcache zip; \
     apk del .deps
 
-# Optional: PostgreSQL support (comment out if not needed)
+# PostgreSQL support
 RUN set -eux; \
     apk add --no-cache postgresql-libs; \
     apk add --no-cache --virtual .deps postgresql-dev; \
@@ -56,7 +56,10 @@ RUN set -eux; \
 
 # Copy customized SnappyMail from customizer stage
 COPY --chown=www-data:www-data --from=customizer /tmp/snappymail /snappymail
-RUN mv -v /snappymail/data /var/lib/snappymail
+RUN set -eux; \
+    mkdir -p /var/lib/snappymail; \
+    if [ -d /snappymail/data ]; then mv /snappymail/data/* /var/lib/snappymail/ || true; fi; \
+    chown -R www-data:www-data /var/lib/snappymail
 
 # Copy configuration files from SnappyMail release
 COPY .docker/release/files/ /
