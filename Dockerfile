@@ -119,7 +119,7 @@ COPY --chown=www-data:www-data --from=customizer /tmp/snappymail /snappymail
 RUN mv -v /snappymail/data /var/lib/snappymail
 
 # Copy configuration files from SnappyMail release
-COPY snappymail/.docker/release/files/ /
+COPY .docker/release/files/ /
 
 # Setup permissions
 RUN set -eux; \
