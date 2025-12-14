@@ -59,15 +59,13 @@ spec:
             memory: "256Mi"
             cpu: "200m"
         livenessProbe:
-          httpGet:
-            path: /
-            port: 8888
+          tcpSocket:
+            port: 9000
           initialDelaySeconds: 10
           periodSeconds: 30
         readinessProbe:
-          httpGet:
-            path: /
-            port: 8888
+          tcpSocket:
+            port: 9000
           initialDelaySeconds: 5
           periodSeconds: 10
       volumes:

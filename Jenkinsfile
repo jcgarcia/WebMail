@@ -82,8 +82,7 @@ pipeline {
                         // Update image with new build
                         sh '''
                             kubectl -n webmail set image deployment/snappymail \
-                                snappymail=${IMAGE_NAME}:${IMAGE_TAG} \
-                                --record
+                                snappymail=${IMAGE_NAME}:${IMAGE_TAG}
                         '''
                         
                         // Wait for rollout
