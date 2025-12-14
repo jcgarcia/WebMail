@@ -55,15 +55,15 @@ COPY .docker/release/files/ /
 
 # Setup permissions
 RUN set -eux; \
-    chown www-data:www-data /snappymail/include.php; \
-    chmod 440 /snappymail/include.php; \
+    chown www-data:www-data /snappymail/v/2.38.2/include.php; \
+    chmod 440 /snappymail/v/2.38.2/include.php; \
     chmod +x /entrypoint.sh; \
     mv -v /usr/local/etc/php-fpm.d/docker.conf /usr/local/etc/php-fpm.d/docker.conf.disabled || true; \
     mv -v /usr/local/etc/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf.disabled || true; \
     mv -v /usr/local/etc/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf.disabled || true
 
 USER root
-WORKDIR /snappymail
+WORKDIR /snappymail/v/2.38.2
 VOLUME /var/lib/snappymail
 EXPOSE 8888
 EXPOSE 9000

@@ -38,7 +38,7 @@ if [ ! -f "$SNAPPYMAIL_CONFIG_FILE" ]; then
     # Run snappymail and exit. This populates the snappymail data directory and generates the config file
     # On error, print php exception and exit
     EXITCODE=
-    su - www-data -s /bin/sh -c 'php /snappymail/index.php' > /tmp/out || EXITCODE=$?
+    su - www-data -s /bin/sh -c 'php /snappymail/v/2.38.2/index.php' > /tmp/out || EXITCODE=$?
     if [ -n "$EXITCODE" ]; then
         cat /tmp/out
         exit "$EXITCODE"
