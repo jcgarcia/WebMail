@@ -12,8 +12,8 @@ RUN wget -q https://github.com/the-djmaze/snappymail/releases/download/v2.38.2/s
     rm snappymail-2.38.2.tar.gz
 
 # Apply Ingasti customizations
-COPY branding/logo.png /tmp/snappymail/assets/logo.png || true
-RUN find /tmp/snappymail -name "*.css" -type f -exec sed -i 's/#ffffff/#fefefe/g' {} \; || true
+COPY branding/logo.png /tmp/snappymail/assets/logo.png
+RUN find /tmp/snappymail -name "*.css" -type f -exec sed -i 's/#ffffff/#fefefe/g' {} \;
 
 # Create final image from official PHP base
 FROM php:8.2-fpm-alpine
