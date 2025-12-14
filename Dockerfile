@@ -41,8 +41,11 @@ RUN set -eux; \
 
 # Core extensions (opcache without JIT to speed up build on ARM64)
 RUN set -eux; \
+    apk add --no-cache libzip; \
+    apk add --no-cache --virtual .deps libzip-dev; \
     docker-php-ext-configure opcache --disable-opcache-jit; \
-    docker-php-ext-install pdo_mysql opcache zip
+    docker-php-ext-install pdo_mysql opcache zip; \
+    apk del .deps
 
 # Optional: PostgreSQL support (comment out if not needed)
 RUN set -eux; \
