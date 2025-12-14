@@ -11,7 +11,8 @@ RUN wget -q https://github.com/the-djmaze/snappymail/releases/download/v2.38.2/s
     tar -xzf snappymail-2.38.2.tar.gz && \
     rm snappymail-2.38.2.tar.gz && \
     mv /tmp/snappymail/v/2.38.2/* /tmp/snappymail/ && \
-    rm -rf /tmp/snappymail/v
+    rm -rf /tmp/snappymail/v && \
+    rm -f /tmp/snappymail/index.php /tmp/snappymail/release.php
 
 # Apply Ingasti customizations
 COPY branding/logo.png /tmp/snappymail/assets/logo.png
