@@ -1,45 +1,29 @@
 # syntax=docker/dockerfile:1
+# SnappyMail WebMail with Ingasti Customizations
+# Use pre-built SnappyMail release and apply customizations
 
-FROM alpine:3.18.5 AS builder
-RUN apk add --no-cache php82 php82-json php-phar php-zip
-RUN apk add --no-cache npm
-RUN npm install -g gulp yarn
-WORKDIR /source
-COPY package.json yarn.lock ./
-RUN yarn install
-COPY . .
+FROM alpine:3.18.5 AS customizer
+RUN apk add --no-cache bash imagemagick wget
 
-# Apply Ingasti branding customizations
-# 1. Copy custom logo to assets directory
-RUN mkdir -p snappymail/assets && cp branding/logo.png snappymail/assets/logo.png || true
+# Download and extract SnappyMail release
+WORKDIR /tmp
+RUN wget -q https://github.com/the-djmaze/snappymail/releases/download/v2.38.2/snappymail-2.38.2.tar.gz && \
+    tar -xzf snappymail-2.38.2.tar.gz && \
+    rm snappymail-2.38.2.tar.gz
 
-# 2. Apply background color customization (#fefefe) to all CSS files
-RUN find . -name "*.css" -type f -exec sed -i 's/#ffffff/#fefefe/g' {} \; || true
+# Apply Ingasti customizations
+COPY branding/logo.png /tmp/snappymail/assets/logo.png || true
+RUN find /tmp/snappymail -name "*.css" -type f -exec sed -i 's/#ffffff/#fefefe/g' {} \; || true
 
-# Patch release.php with hotfix from: https://github.com/xgbstar1/snappymail-docker/blob/main/Dockerfile, so that release.php doesn't fail with error
-RUN sed -i 's_^if.*rename.*snappymail.v.0.0.0.*$_if (!!system("mv snappymail/v/0.0.0 snappymail/v/{$package->version}")) {_' cli/release.php  || true
-RUN php release.php
-RUN set -eux; \
-    VERSION=$( ls build/dist/releases/webmail ); \
-    ls -al build/dist/releases/webmail/$VERSION/snappymail-$VERSION.tar.gz; \
-    mkdir -p /snappymail; \
-    tar -zxvf build/dist/releases/webmail/$VERSION/snappymail-$VERSION.tar.gz -C /snappymail; \
-    find /snappymail -type d -exec chmod 550 {} \; ; \
-    find /snappymail -type f -exec chmod 440 {} \; ; \
-    find /snappymail/data -type d -exec chmod 750 {} \; ; \
-    # Remove unneeded files
-    rm -v /snappymail/README.md /snappymail/_include.php
+# Create final image from official PHP base
+FROM php:8.2-fpm-alpine
 
-# Inspired by the original Rainloop dockerfile from youtous on GitLab
-FROM php:8.2-fpm-alpine AS final
+LABEL org.label-schema.description="SnappyMail WebMail (Ingasti Custom) using nginx, php-fpm on Alpine"
 
-LABEL org.label-schema.description="SnappyMail webmail client image using nginx, php-fpm on Alpine"
-
-# Install dependencies such as nginx
+# Install runtime dependencies
 RUN apk add --no-cache ca-certificates nginx supervisor bash
 
 # Install PHP extensions
-# apcu
 RUN set -eux; \
     apk add --no-cache --virtual .build-dependencies $PHPIZE_DEPS; \
     pecl install apcu; \
@@ -47,7 +31,6 @@ RUN set -eux; \
     docker-php-source delete; \
     apk del .build-dependencies;
 
-# gd
 RUN set -eux; \
     apk add --no-cache freetype libjpeg-turbo libpng; \
     apk add --no-cache --virtual .deps freetype-dev libjpeg-turbo-dev libpng-dev; \
@@ -55,18 +38,6 @@ RUN set -eux; \
     docker-php-ext-install gd; \
     apk del .deps
 
-# gmagick
-# RUN set -eux; \
-#     apk add --no-cache graphicsmagick libgomp; \
-#     apk add --no-cache --virtual .deps graphicsmagick-dev libtool; \
-#     apk add --no-cache --virtual .build-dependencies $PHPIZE_DEPS; \
-#     pecl install gmagick-2.0.6RC1; \
-#     docker-php-ext-enable gmagick; \
-#     docker-php-source delete; \
-#     apk del .build-dependencies; \
-#     apk del .deps
-
-# gnupg
 RUN set -eux; \
     apk add --no-cache gnupg gpgme; \
     apk add --no-cache --virtual .deps gpgme-dev; \
@@ -77,7 +48,6 @@ RUN set -eux; \
     apk del .build-dependencies; \
     apk del .deps
 
-# imagick
 RUN set -eux; \
     apk add --no-cache imagemagick libgomp; \
     apk add --no-cache --virtual .deps imagemagick-dev; \
@@ -88,7 +58,6 @@ RUN set -eux; \
     apk del .build-dependencies; \
     apk del .deps
 
-# intl
 RUN set -eux; \
     apk add --no-cache icu-libs; \
     apk add --no-cache --virtual .deps icu-dev; \
@@ -96,7 +65,6 @@ RUN set -eux; \
     docker-php-ext-install intl; \
     apk del .deps
 
-# ldap
 RUN set -eux; \
     apk add --no-cache libldap; \
     apk add --no-cache --virtual .deps openldap-dev; \
@@ -104,20 +72,14 @@ RUN set -eux; \
     docker-php-ext-install ldap; \
     apk del .deps
 
-# mysql
-RUN docker-php-ext-install pdo_mysql
+RUN docker-php-ext-install pdo_mysql opcache
 
-# opcache
-RUN docker-php-ext-install opcache
-
-# postgres
 RUN set -eux; \
     apk add --no-cache postgresql-libs; \
     apk add --no-cache --virtual .deps postgresql-dev; \
     docker-php-ext-install pdo_pgsql; \
     apk del .deps
 
-# redis
 RUN set -eux; \
     apk add --no-cache liblzf zstd-libs; \
     apk add --no-cache --virtual .deps zstd-dev; \
@@ -130,14 +92,12 @@ RUN set -eux; \
     apk del .build-dependencies; \
     apk del .deps
 
-# tidy
 RUN set -eux; \
     apk add --no-cache tidyhtml; \
     apk add --no-cache --virtual .deps tidyhtml-dev; \
     docker-php-ext-install tidy; \
     apk del .deps
 
-# uuid
 RUN set -eux; \
     apk add --no-cache libuuid; \
     apk add --no-cache --virtual .deps util-linux-dev; \
@@ -148,44 +108,27 @@ RUN set -eux; \
     apk del .build-dependencies; \
     apk del .deps
 
-# xxtea - Manually install php8 compatible version from https://github.com/xxtea/xxtea-pecl master branch
-RUN set -eux; \
-    apk add --no-cache --virtual .build-dependencies $PHPIZE_DEPS; \
-    wget -q https://github.com/xxtea/xxtea-pecl/tarball/3f5888a29045e12301254151737c5dab4523a1c1 -O xxtea.tar; \
-    echo '9cbfd9c27255767deb26ddedf69e738d401d88ac9762d82c8510f9768842ca18  xxtea.tar' | sha256sum -c -; \
-    tar -C /usr/src -xvf xxtea.tar; \
-    cd /usr/src/xxtea-xxtea-pecl-3f5888a; \
-    phpize; \
-    ./configure --with-php-config=/usr/local/bin/php-config --enable-xxtea=yes; \
-    make install; \
-    docker-php-ext-enable xxtea; \
-    cd -; \
-    rm -fv xxtea.tar; \
-    rm -rfv /usr/src/xxtea*; \
-    apk del .build-dependencies;
-
-# zip
 RUN set -eux; \
     apk add --no-cache libzip; \
     apk add --no-cache --virtual .deps libzip-dev; \
     docker-php-ext-install zip; \
     apk del .deps
 
-# Install snappymail
-# The 'www-data' user/group in alpine is 82:82. The 'nginx' user/group in alpine is 101:101, and is part of www-data group
-COPY --chown=www-data:www-data --from=builder /snappymail /snappymail
-# Use a custom snappymail data folder
-RUN mv -v /snappymail/data /var/lib/snappymail;
-# Setup configs
-COPY --chown=root:root .docker/release/files /
+# Copy customized SnappyMail from customizer stage
+COPY --chown=www-data:www-data --from=customizer /tmp/snappymail /snappymail
+RUN mv -v /snappymail/data /var/lib/snappymail
+
+# Copy configuration files from SnappyMail release
+COPY snappymail/.docker/release/files/ /
+
+# Setup permissions
 RUN set -eux; \
     chown www-data:www-data /snappymail/include.php; \
     chmod 440 /snappymail/include.php; \
     chmod +x /entrypoint.sh; \
-    # Disable the built-in php-fpm configs, since we're using our own config
-    mv -v /usr/local/etc/php-fpm.d/docker.conf /usr/local/etc/php-fpm.d/docker.conf.disabled; \
-    mv -v /usr/local/etc/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf.disabled; \
-    mv -v /usr/local/etc/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf.disabled;
+    mv -v /usr/local/etc/php-fpm.d/docker.conf /usr/local/etc/php-fpm.d/docker.conf.disabled || true; \
+    mv -v /usr/local/etc/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf.disabled || true; \
+    mv -v /usr/local/etc/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf.disabled || true
 
 USER root
 WORKDIR /snappymail
