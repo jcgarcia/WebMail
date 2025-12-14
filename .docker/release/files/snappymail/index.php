@@ -7,6 +7,8 @@ if (!defined('APP_VERSION'))
 {
 	define('APP_VERSION', '2.38.2');
 	define('APP_INDEX_ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
+	// Data folder is in /var/lib/snappymail (configured in entrypoint.sh)
+	define('APP_DATA_FOLDER_PATH', '/var/lib/snappymail/');
 }
 
 // After flattening, include.php is now at root level
