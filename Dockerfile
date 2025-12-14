@@ -39,8 +39,10 @@ RUN set -eux; \
     docker-php-ext-install gd; \
     apk del .deps
 
-# Core extensions
-RUN docker-php-ext-install pdo_mysql opcache zip
+# Core extensions (opcache without JIT to speed up build on ARM64)
+RUN set -eux; \
+    docker-php-ext-configure opcache --disable-opcache-jit; \
+    docker-php-ext-install pdo_mysql opcache zip
 
 # Optional: PostgreSQL support (comment out if not needed)
 RUN set -eux; \
