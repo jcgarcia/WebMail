@@ -9,14 +9,11 @@ RUN apk add --no-cache bash imagemagick wget
 WORKDIR /tmp
 RUN wget -q https://github.com/the-djmaze/snappymail/releases/download/v2.38.2/snappymail-2.38.2.tar.gz && \
     tar -xzf snappymail-2.38.2.tar.gz && \
-    rm snappymail-2.38.2.tar.gz && \
-    mv /tmp/snappymail/v/2.38.2/* /tmp/snappymail/ && \
-    rm -rf /tmp/snappymail/v && \
-    rm -f /tmp/snappymail/index.php /tmp/snappymail/release.php
+    rm snappymail-2.38.2.tar.gz
 
 # Apply Ingasti customizations
-COPY branding/logo.png /tmp/snappymail/assets/logo.png
-RUN find /tmp/snappymail -name "*.css" -type f -exec sed -i 's/#ffffff/#fefefe/g' {} \;
+COPY branding/logo.png /tmp/snappymail/v/2.38.2/assets/logo.png
+RUN find /tmp/snappymail/v/2.38.2 -name "*.css" -type f -exec sed -i 's/#ffffff/#fefefe/g' {} \;
 
 # Create final image from official PHP base (Alpine 3.21 for postgresql-libs support)
 FROM php:8.2-fpm-alpine3.21
