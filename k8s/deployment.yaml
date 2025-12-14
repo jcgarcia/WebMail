@@ -44,7 +44,8 @@ spec:
     spec:
       containers:
       - name: snappymail
-        image: djmaze/snappymail:latest
+        image: ghcr.io/jcgarcia/webmail:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8888
         volumeMounts:
