@@ -5,8 +5,10 @@
 
 if (!defined('APP_VERSION'))
 {
+	// After flattening from snappymail/v/VERSION to root, set version explicitly
 	define('APP_VERSION', '2.38.2');
 	define('APP_INDEX_ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
+	define('APP_VERSION_ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
 	// Data folder is in /var/lib/snappymail (configured in entrypoint.sh)
 	define('APP_DATA_FOLDER_PATH', '/var/lib/snappymail/');
 }
