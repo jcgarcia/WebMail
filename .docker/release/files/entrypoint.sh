@@ -40,23 +40,8 @@ chmod -R 755 /var/lib/snappymail/_data_/
 # Create snappymail default config if absent
 SNAPPYMAIL_CONFIG_FILE=/var/lib/snappymail/_data_/_default_/configs/application.ini
 if [ ! -f "$SNAPPYMAIL_CONFIG_FILE" ]; then
-    echo "[INFO] Creating default Snappymail configuration: $SNAPPYMAIL_CONFIG_FILE"
-    # Run snappymail and exit. This populates the snappymail data directory and generates the config file
-    # On error, print php exception and exit
-    EXITCODE=0
-    su - www-data -s /bin/sh -c 'php /snappymail/v/2.38.2/index.php' > /tmp/out 2>&1 || EXITCODE=$?
-    if [ "$EXITCODE" != "0" ]; then
-        echo "[ERROR] Failed to initialize Snappymail config:"
-        cat /tmp/out
-        exit "$EXITCODE"
-    fi
-    if [ -f "$SNAPPYMAIL_CONFIG_FILE" ]; then
-        echo "[INFO] Config file created successfully"
-    else
-        echo "[ERROR] Config file was not created"
-        cat /tmp/out
-        exit 1
-    fi
+    echo "[INFO] Creating default Snappymail configuration via HTTP request"
+    echo "[INFO] Snappymail will be initialized on first HTTP request"
 fi
 
 echo "[INFO] Overriding values in snappymail configuration: $SNAPPYMAIL_CONFIG_FILE"
