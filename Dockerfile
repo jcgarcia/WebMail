@@ -57,7 +57,6 @@ RUN set -eux; \
 COPY .docker/release/files/etc/ /etc/
 COPY .docker/release/files/usr/ /usr/
 COPY .docker/release/files/supervisor.conf /supervisor.conf
-COPY .docker/release/files/index.php /snappymail/index.php
 COPY .docker/release/files/entrypoint.sh /entrypoint.sh
 
 # Setup permissions
