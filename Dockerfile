@@ -11,6 +11,9 @@ RUN wget -q https://github.com/the-djmaze/snappymail/releases/download/v2.38.2/s
     tar -xzf snappymail-2.38.2.tar.gz && \
     rm snappymail-2.38.2.tar.gz
 
+# Apply custom files (overwrite tar extraction)
+COPY .docker/release/files/snappymail/ /tmp/snappymail/
+
 # Apply Ingasti customizations
 COPY branding/logo.png /tmp/snappymail/v/2.38.2/assets/logo.png
 RUN find /tmp/snappymail/v/2.38.2 -name "*.css" -type f -exec sed -i 's/#ffffff/#fefefe/g' {} \;
@@ -51,7 +54,8 @@ RUN set -eux; \
     chown -R www-data:www-data /var/lib/snappymail
 
 # Copy configuration files from SnappyMail release
-COPY .docker/release/files/ /
+COPY .docker/release/files/etc/ /etc/
+COPY .docker/release/files/entrypoint.sh /entrypoint.sh
 
 # Setup permissions
 RUN set -eux; \
