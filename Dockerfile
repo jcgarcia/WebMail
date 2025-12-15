@@ -56,6 +56,7 @@ RUN set -eux; \
 # Copy configuration files from SnappyMail release
 COPY .docker/release/files/etc/ /etc/
 COPY .docker/release/files/usr/ /usr/
+COPY .docker/release/files/supervisor.conf /supervisor.conf
 COPY .docker/release/files/entrypoint.sh /entrypoint.sh
 
 # Setup permissions
