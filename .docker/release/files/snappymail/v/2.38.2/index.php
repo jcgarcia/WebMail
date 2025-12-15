@@ -1,7 +1,19 @@
 <?php
 
-// This file is intentionally empty
-// The actual bootstrap happens in /snappymail/index.php
-// which is the root index.php that defines APP_VERSION
-// and includes this file's include.php
+if (!defined('APP_VERSION'))
+{
+	define('APP_VERSION', '2.38.2');
+	define('APP_INDEX_ROOT_PATH', dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR);
+}
+
+if (file_exists(APP_INDEX_ROOT_PATH.'snappymail/v/'.APP_VERSION.'/include.php'))
+{
+	include APP_INDEX_ROOT_PATH.'snappymail/v/'.APP_VERSION.'/include.php';
+}
+else
+{
+	echo '[105] Missing snappymail/v/'.APP_VERSION.'/include.php';
+	is_callable('opcache_invalidate') && opcache_invalidate(__FILE__, true);
+	exit(105);
+}
 
