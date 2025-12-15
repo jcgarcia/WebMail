@@ -1,27 +1,20 @@
-# SnappyMail WebMail - Kubernetes Deployment
-# Namespace: webmail
-# URL: mail.ingasti.com
-
----
 apiVersion: v1
 kind: Namespace
 metadata:
   name: webmail
-  labels:
-    app.kubernetes.io/name: webmail
 
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: snappymail-data
+  name: snappymail-pvc
   namespace: webmail
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 256Mi
+      storage: 1Gi
   storageClassName: local-path
 
 ---
@@ -30,8 +23,6 @@ kind: Deployment
 metadata:
   name: snappymail
   namespace: webmail
-  labels:
-    app: snappymail
 spec:
   replicas: 1
   selector:
@@ -44,38 +35,17 @@ spec:
     spec:
       containers:
       - name: snappymail
-        image: ghcr.io/jcgarcia/webmail:latest
-        imagePullPolicy: Always
+        image: jasonmun/snappymail:latest
+        imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 8888
+        - containerPort: 80
         volumeMounts:
-        - name: data
-          mountPath: /var/lib/snappymail
-        resources:
-          requests:
-            memory: "64Mi"
-            cpu: "50m"
-          limits:
-            memory: "256Mi"
-            cpu: "200m"
-        livenessProbe:
-          tcpSocket:
-            port: 8888
-          initialDelaySeconds: 30
-          periodSeconds: 30
-          failureThreshold: 5
-        readinessProbe:
-          tcpSocket:
-            port: 8888
-          initialDelaySeconds: 20
-          periodSeconds: 5
-          failureThreshold: 10
+        - name: snappymail-data
+          mountPath: /var/snappymail/data
       volumes:
-      - name: data
+      - name: snappymail-data
         persistentVolumeClaim:
-          claimName: snappymail-data
-      imagePullSecrets:
-      - name: ghcr-credentials
+          claimName: snappymail-pvc
 
 ---
 apiVersion: v1
@@ -89,4 +59,4 @@ spec:
     app: snappymail
   ports:
     - port: 80
-      targetPort: 8888
+      targetPort: 80
