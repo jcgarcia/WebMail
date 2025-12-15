@@ -3,7 +3,7 @@
 if (!defined('APP_VERSION'))
 {
 	define('APP_VERSION', '2.38.2');
-	define('APP_INDEX_ROOT_PATH', dirname(dirname(__DIR__)) . DIRECTORY_SEPARATOR);
+	define('APP_INDEX_ROOT_PATH', dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR);
 }
 
 if (file_exists(APP_INDEX_ROOT_PATH.'snappymail/v/'.APP_VERSION.'/include.php'))
