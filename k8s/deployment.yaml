@@ -60,13 +60,13 @@ spec:
             cpu: "200m"
         livenessProbe:
           tcpSocket:
-            port: 9000
-          initialDelaySeconds: 10
+            port: 8888
+          initialDelaySeconds: 15
           periodSeconds: 30
         readinessProbe:
           tcpSocket:
-            port: 9000
-          initialDelaySeconds: 5
+            port: 8888
+          initialDelaySeconds: 10
           periodSeconds: 10
       volumes:
       - name: data
