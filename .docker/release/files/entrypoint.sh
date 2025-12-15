@@ -28,8 +28,14 @@ echo "[INFO] Snappymail version: 2.38.2"
 # Set permissions on snappymail data
 echo "[INFO] Setting permissions on /var/lib/snappymail"
 chown -R www-data:www-data /var/lib/snappymail/
-chmod 550 /var/lib/snappymail/
-find /var/lib/snappymail/ -type d -exec chmod 750 {} \;
+chmod 755 /var/lib/snappymail/
+find /var/lib/snappymail/ -type d -exec chmod 755 {} \;
+find /var/lib/snappymail/ -type f -exec chmod 644 {} \;
+
+# Ensure data directory structure exists
+mkdir -p /var/lib/snappymail/_data_/_default_/{cache,configs,domains,plugins,storage}
+chown -R www-data:www-data /var/lib/snappymail/_data_/
+chmod -R 755 /var/lib/snappymail/_data_/
 
 # Create snappymail default config if absent
 SNAPPYMAIL_CONFIG_FILE=/var/lib/snappymail/_data_/_default_/configs/application.ini
