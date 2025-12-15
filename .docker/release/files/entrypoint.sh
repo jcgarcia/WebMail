@@ -28,8 +28,8 @@ echo "[INFO] Snappymail version: 2.38.2"
 # Set permissions on snappymail data
 echo "[INFO] Setting permissions on /var/lib/snappymail"
 chown -R www-data:www-data /var/lib/snappymail/
-chmod 755 /var/lib/snappymail/
-find /var/lib/snappymail/ -type d -exec chmod 755 {} \;
+chmod 750 /var/lib/snappymail/
+find /var/lib/snappymail/ -type d -exec chmod 750 {} \;
 find /var/lib/snappymail/ -type f -exec chmod 644 {} \;
 
 # Ensure data directory structure exists
