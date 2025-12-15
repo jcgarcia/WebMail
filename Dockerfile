@@ -51,7 +51,11 @@ COPY --chown=www-data:www-data --from=customizer /tmp/snappymail /snappymail
 RUN set -eux; \
     mkdir -p /var/lib/snappymail; \
     if [ -d /snappymail/data ]; then mv /snappymail/data/* /var/lib/snappymail/ || true; fi; \
-    chown -R www-data:www-data /var/lib/snappymail
+    chown -R www-data:www-data /var/lib/snappymail; \
+    chmod -R 700 /var/lib/snappymail; \
+    mkdir -p /var/lib/snappymail/_data_/_default_/{cache,configs,domains,plugins,storage}; \
+    chown -R www-data:www-data /var/lib/snappymail/_data_; \
+    chmod -R 700 /var/lib/snappymail/_data_
 
 # Copy configuration files from SnappyMail release
 COPY .docker/release/files/etc/ /etc/

@@ -37,46 +37,24 @@ mkdir -p /var/lib/snappymail/_data_/_default_/{cache,configs,domains,plugins,sto
 chown -R www-data:www-data /var/lib/snappymail/_data_/
 chmod -R 755 /var/lib/snappymail/_data_/
 
-# Create snappymail default config if absent
-SNAPPYMAIL_CONFIG_FILE=/var/lib/snappymail/_data_/_default_/configs/application.ini
-if [ ! -f "$SNAPPYMAIL_CONFIG_FILE" ]; then
-    echo "[INFO] Creating default Snappymail configuration via HTTP request"
-    echo "[INFO] Snappymail will be initialized on first HTTP request"
-fi
+echo "[INFO] Snappymail version: 2.38.2"
 
-if [ -f "$SNAPPYMAIL_CONFIG_FILE" ]; then
-    echo "[INFO] Overriding values in snappymail configuration: $SNAPPYMAIL_CONFIG_FILE"
-    # Enable output of snappymail logs
-    sed '/^\; Enable logging/{
-N
-s/enable = Off/enable = On/
-}' -i $SNAPPYMAIL_CONFIG_FILE
-    # Redirect snappymail logs to stderr /stdout
-    sed 's/^filename = .*/filename = "stderr"/' -i $SNAPPYMAIL_CONFIG_FILE
-    sed 's/^write_on_error_only = .*/write_on_error_only = Off/' -i $SNAPPYMAIL_CONFIG_FILE
-    sed 's/^write_on_php_error_only = .*/write_on_php_error_only = On/' -i $SNAPPYMAIL_CONFIG_FILE
-    # Always enable snappymail Auth logging
-    sed 's/^auth_logging = .*/auth_logging = On/' -i $SNAPPYMAIL_CONFIG_FILE
-    sed 's/^auth_logging_filename = .*/auth_logging_filename = "auth.log"/' -i $SNAPPYMAIL_CONFIG_FILE
-    sed 's/^auth_logging_format = .*/auth_logging_format = "[{date:Y-m-d H:i:s}] Auth failed: ip={request:ip} user={imap:login} host={imap:host} port={imap:port}"/' -i $SNAPPYMAIL_CONFIG_FILE
-    sed 's/^auth_syslog = .*/auth_syslog = Off/' -i $SNAPPYMAIL_CONFIG_FILE
-else
-    echo "[INFO] Config file not yet created, will be initialized on first HTTP request"
-fi
+# Set permissions on snappymail data
+echo "[INFO] Setting permissions on /var/lib/snappymail"
+chown -R www-data:www-data /var/lib/snappymail/
+chmod -R 700 /var/lib/snappymail/
 
+# Background initialization after services start
 (
-    while ! nc -vz -w 1 127.0.0.1 8888 > /dev/null 2>&1; do echo "[INFO] Checking whether nginx is alive"; sleep 1; done
-    while ! nc -vz -w 1 127.0.0.1 9000 > /dev/null 2>&1; do echo "[INFO] Checking whether php-fpm is alive"; sleep 1; done
-    # Create snappymail admin password if absent
-    SNAPPYMAIL_ADMIN_PASSWORD_FILE=/var/lib/snappymail/_data_/_default_/admin_password.txt
-    if [ ! -f "$SNAPPYMAIL_ADMIN_PASSWORD_FILE" ]; then
-        echo "[INFO] Creating Snappymail admin password file: $SNAPPYMAIL_ADMIN_PASSWORD_FILE"
-        wget -T 1 -qO- 'http://127.0.0.1:8888/?/AdminAppData/0/12345/' > /dev/null
-        echo "[INFO] Snappymail Admin Panel ready at http://localhost:8888/?admin. Login using password in $SNAPPYMAIL_ADMIN_PASSWORD_FILE"
-    fi
-
-    wget -T 1 -qO- 'http://127.0.0.1:8888/' > /dev/null
-    echo "[INFO] Snappymail ready at http://localhost:8888/"
+    while ! nc -vz -w 1 127.0.0.1 8888 > /dev/null 2>&1; do echo "[INFO] Waiting for nginx"; sleep 1; done
+    while ! nc -vz -w 1 127.0.0.1 9000 > /dev/null 2>&1; do echo "[INFO] Waiting for php-fpm"; sleep 1; done
+    
+    echo "[INFO] Services ready, initializing application"
+    for i in {1..10}; do
+        wget -T 2 -qO- http://127.0.0.1:8888/ > /dev/null 2>&1 && break
+        sleep 1
+    done
+    echo "[INFO] Application initialized"
 ) &
 
 # RUN !
