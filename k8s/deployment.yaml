@@ -35,13 +35,13 @@ spec:
     spec:
       containers:
       - name: snappymail
-        image: jasonmun/snappymail:latest
+        image: djmaze/snappymail:latest
         imagePullPolicy: IfNotPresent
         ports:
-        - containerPort: 80
+        - containerPort: 8888
         volumeMounts:
         - name: snappymail-data
-          mountPath: /var/snappymail/data
+          mountPath: /var/lib/snappymail
       volumes:
       - name: snappymail-data
         persistentVolumeClaim:
@@ -59,4 +59,4 @@ spec:
     app: snappymail
   ports:
     - port: 80
-      targetPort: 80
+      targetPort: 8888
