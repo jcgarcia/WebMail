@@ -224,3 +224,4 @@ Still TODO:
 |ckeditor	|       ?	| 520.035	|      ?	|  155.916	|
 
 CKEditor including the 7 asset requests (css,language,plugins,icons) is 633.46 KB / 180.47 KB (gzip).
+# Build 47
