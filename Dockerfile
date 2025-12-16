@@ -3,25 +3,9 @@
 # Use pre-built SnappyMail release and apply customizations
 
 FROM alpine:3.18.5 AS customizer
-RUN apk add --no-cache bash imagemagick wget
+RUN apk add --no-cache bash imagemagick
 
-# Download and extract SnappyMail release
-WORKDIR /tmp
-RUN wget -q https://github.com/the-djmaze/snappymail/releases/download/v2.38.2/snappymail-2.38.2.tar.gz && \
-    tar -xzf snappymail-2.38.2.tar.gz && \
-    rm snappymail-2.38.2.tar.gz
-
-# Fix CSS: Remove LoginView button background override to show blue color
-RUN set -eux; \
-    sed -i 's/.LoginView .btn,.LoginView input{background:0 0;/.LoginView input{background:0 0;/g' \
-        /tmp/snappymail/v/2.38.2/static/css/app.css; \
-    # Regenerate gzipped versions
-    cd /tmp/snappymail/v/2.38.2/static/css/; \
-    gzip -f -c app.css > app.css.gz; \
-    gzip -f -c app.min.css > app.min.css.gz; \
-    echo "CSS files fixed and gzipped"
-
-# Apply custom files (overwrite tar extraction)
+# Use pre-built SnappyMail from git (no need to download tar each build)
 COPY .docker/release/files/snappymail/ /tmp/snappymail/
 
 # Apply Ingasti customizations
