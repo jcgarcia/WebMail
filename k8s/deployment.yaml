@@ -42,35 +42,85 @@ spec:
           # Create branding directories in persistent volume
           mkdir -p /var/lib/snappymail/custom-themes/Ingasti/images
           
-          # Create custom CSS for solid background
+          # Create comprehensive Ingasti theme CSS
           cat > /var/lib/snappymail/custom-themes/Ingasti/styles.css << 'EOF'
-          /* Ingasti Custom Branding */
+          /* Ingasti SnappyMail Theme */
+          :root {
+            --main-bg-color: #fefefe;
+            --main-bg-image: none;
+            --ingasti-primary: #FF6B35;
+            --ingasti-secondary: #004E89;
+            --ingasti-accent: #F77F00;
+          }
           html, body {
-              background-color: #fefefe !important;
-              background-image: none !important;
+            background-color: var(--main-bg-color) !important;
+            background-image: none !important;
+            color: #1a1a1a !important;
           }
-          body {
-              background: #fefefe !important;
-          }
+          body { background: var(--main-bg-color) !important; }
           .sp-container, .login-container, #wrapper, .body {
-              background-color: #fefefe !important;
-              background-image: none !important;
+            background-color: var(--main-bg-color) !important;
+            background-image: none !important;
           }
-          .sp-logo {
-              display: block !important;
-              width: 120px;
-              height: 60px;
-              margin: 20px auto;
-              background-image: url('./images/ingasti-logo.png');
-              background-size: contain;
-              background-repeat: no-repeat;
-              background-position: center;
+          .sp-logo, .login-logo, [class*="logo"] {
+            display: block !important;
+            width: 140px;
+            height: 70px;
+            margin: 30px auto;
+            background-image: url('./images/ingasti-logo.png') !important;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
           }
+          .login-form, .form-group, [class*="form"] {
+            background-color: rgba(0, 78, 137, 0.08) !important;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid var(--ingasti-secondary) !important;
+          }
+          input[type="text"], input[type="email"], input[type="password"], [class*="input"] {
+            background-color: #ffffff !important;
+            border: 1px solid var(--ingasti-secondary) !important;
+            color: #1a1a1a !important;
+          }
+          input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
+            border-color: var(--ingasti-primary) !important;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1) !important;
+          }
+          button, [type="submit"], [class*="btn"] {
+            background-color: var(--ingasti-primary) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 4px;
+            font-weight: 600;
+          }
+          button:hover, [type="submit"]:hover {
+            background-color: var(--ingasti-accent) !important;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3) !important;
+          }
+          .login-title, h1, h2, h3, [class*="title"] {
+            color: var(--ingasti-secondary) !important;
+            font-weight: 600;
+          }
+          a, [class*="link"] { color: var(--ingasti-primary) !important; }
+          input[type="checkbox"] { accent-color: var(--ingasti-primary) !important; }
           EOF
           
           # Copy logo to images directory
+          # Copy or create logo
           if [ -f /var/lib/snappymail/logo.png ]; then
               cp /var/lib/snappymail/logo.png /var/lib/snappymail/custom-themes/Ingasti/images/ingasti-logo.png
+          else
+              # Create a simple Ingasti placeholder logo
+              echo "Creating placeholder logo..."
+              # Create SVG logo as inline data
+              cat > /var/lib/snappymail/custom-themes/Ingasti/images/ingasti-logo.svg << 'LOGOEOF'
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 100">
+                <rect width="200" height="100" fill="#fefefe" rx="4"/>
+                <text x="100" y="60" font-size="48" font-weight="bold" text-anchor="middle" fill="#FF6B35">Ingasti</text>
+                <line x1="40" y1="75" x2="160" y2="75" stroke="#004E89" stroke-width="2"/>
+              </svg>
+              LOGOEOF
           fi
           
           echo "Branding setup complete"
