@@ -1,0 +1,58 @@
+/* SnappyMail Custom Branding - WebMail */
+
+/* Replace the default patterned background with solid color */
+body,
+html {
+  background-color: #fefefe !important;
+  background-image: none !important;
+}
+
+/* Login and container backgrounds */
+.container,
+.login-container,
+.panel-container {
+  background-color: #fefefe !important;
+}
+
+/* Ensure login form has proper contrast */
+.auth-container {
+  background-color: #fefefe !important;
+}
+
+/* Main application background */
+#wrapper {
+  background-color: #fefefe !important;
+}
+
+/* Remove any background patterns from login screens */
+.sp-logo-wrapper {
+  margin-bottom: 20px;
+}
+
+.sp-logo {
+  max-width: 200px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Ensure text is readable on solid background */
+.login-form,
+.admin-panel {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+  padding: 30px;
+}
+
+/* Logo styling for both login and admin */
+.brand-logo {
+  max-width: 150px;
+  height: auto;
+  margin: 0 auto 30px;
+  display: block;
+}
+
+/* Smooth transitions */
+* {
+  transition: background-color 0.3s ease;
+}

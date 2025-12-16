@@ -1,0 +1,11 @@
+FROM djmaze/snappymail:latest
+
+# Ingasti Branding Customization
+RUN sed -i 's|--main-bg-image: url("images/background.jpg");|--main-bg-image: none;|g' /snappymail/snappymail/v/2.38.2/themes/Default/styles.css && \
+    sed -i 's|--main-bg-color: #48525C;|--main-bg-color: #fefefe;|g' /snappymail/snappymail/v/2.38.2/themes/Default/styles.css && \
+    echo "✅ Ingasti branding applied: solid #fefefe background"
+
+# Optional: Add logo if needed
+COPY branding/logo.png /snappymail/snappymail/v/2.38.2/themes/Default/images/ingasti-logo.png
+
+RUN chown www-data:www-data /snappymail/snappymail/v/2.38.2/themes/Default/images/ingasti-logo.png
