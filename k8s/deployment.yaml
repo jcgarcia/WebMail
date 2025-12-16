@@ -77,8 +77,7 @@ spec:
             padding: 20px;
             border: 1px solid var(--ingasti-secondary) !important;
           }
-          input[type="text"], input[type="email"], input[type="password"], [class*="inpu
-t"] {
+          input[type="text"], input[type="email"], input[type="password"], [class*="input"] {
             background-color: #ffffff !important;
             border: 1px solid var(--ingasti-secondary) !important;
             color: #1a1a1a !important;
