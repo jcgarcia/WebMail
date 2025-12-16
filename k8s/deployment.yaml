@@ -101,6 +101,8 @@ spec:
         volumeMounts:
         - name: snappymail-data
           mountPath: /var/lib/snappymail
+      imagePullSecrets:
+      - name: ghcr-credentials
       volumes:
       - name: snappymail-data
         persistentVolumeClaim:
