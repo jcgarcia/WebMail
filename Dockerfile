@@ -85,6 +85,8 @@ COPY .docker/release/files/entrypoint.sh /entrypoint.sh
 RUN set -eux; \
     chown www-data:www-data /snappymail/v/2.38.2/include.php; \
     chmod 440 /snappymail/v/2.38.2/include.php; \
+    # Make CSS files read-only (444 = r--r--r--)
+    chmod 444 /snappymail/v/2.38.2/static/css/*.css*; \
     chmod +x /entrypoint.sh; \
     mv -v /usr/local/etc/php-fpm.d/docker.conf /usr/local/etc/php-fpm.d/docker.conf.disabled || true; \
     mv -v /usr/local/etc/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf.disabled || true; \
