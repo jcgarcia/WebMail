@@ -11,6 +11,16 @@ COPY .docker/release/files/snappymail/ /tmp/snappymail/
 # Apply Ingasti customizations
 COPY branding/logo.png /tmp/snappymail/v/2.38.2/assets/logo.png
 
+# Fix CSS: Remove LoginView button background override to show blue color
+RUN set -eux; \
+    sed -i 's/.LoginView .btn,.LoginView input{background:0 0;/.LoginView input{background:0 0;/g' \
+        /tmp/snappymail/v/2.38.2/static/css/app.css; \
+    # Regenerate gzipped versions
+    cd /tmp/snappymail/v/2.38.2/static/css/; \
+    gzip -f -c app.css > app.css.gz; \
+    gzip -f -c app.min.css > app.min.css.gz; \
+    echo "CSS files fixed and gzipped"
+
 # Change CSS colors - handle theme CSS files only (static CSS files already modified above)
 RUN set -eux; \
     # For regular CSS files in themes directory
