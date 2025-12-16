@@ -128,10 +128,10 @@ spec:
               - |
                 if [ -d /var/lib/snappymail/custom-themes/Ingasti ]; then
                   if [ -f /var/lib/snappymail/custom-themes/Ingasti/styles.css ]; then
-                    # Append custom Ingasti CSS to Default theme (don't replace)
-                    cat /var/lib/snappymail/custom-themes/Ingasti/styles.css >> /snappymail/snappymail/v/2.38.2/themes/Default/styles.css 2>/dev/null || true
+                    # PREPEND custom Ingasti CSS to Default theme (so variables are defined first)
+                    cat /var/lib/snappymail/custom-themes/Ingasti/styles.css /snappymail/snappymail/v/2.38.2/themes/Default/styles.css > /tmp/merged.css && mv /tmp/merged.css /snappymail/snappymail/v/2.38.2/themes/Default/styles.css
                   fi
-                  echo "Ingasti branding appended"
+                  echo "Ingasti branding applied"
                 fi
         volumeMounts:
         - name: snappymail-data
