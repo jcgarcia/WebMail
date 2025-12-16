@@ -45,9 +45,12 @@ pipeline {
             steps {
                 script {
                     echo "📤 Pushing image to GitHub Container Registry..."
-                    sh """
-                        docker push ${FULL_IMAGE}
-                    """
+                    withCredentials([usernamePassword(credentialsId: 'ghcr-credentials', usernameVariable: 'GHCR_USER', passwordVariable: 'GHCR_TOKEN')]) {
+                        sh '''
+                            echo "${GHCR_TOKEN}" | docker login ghcr.io -u ${GHCR_USER} --password-stdin
+                            docker push ${FULL_IMAGE}
+                        '''
+                    }
                 }
             }
         }
