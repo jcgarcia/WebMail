@@ -16,7 +16,12 @@ COPY .docker/release/files/snappymail/ /tmp/snappymail/
 
 # Apply Ingasti customizations
 COPY branding/logo.png /tmp/snappymail/v/2.38.2/assets/logo.png
-RUN find /tmp/snappymail/v/2.38.2 -name "*.css" -type f -exec sed -i 's/#ffffff/#fefefe/g' {} \;
+# Change colors: white to off-white, orange button to blue
+RUN find /tmp/snappymail/v/2.38.2 -name "*.css" -type f -exec sed -i \
+    -e 's/#ffffff/#fefefe/g' \
+    -e 's/FF6B35/#0066FF/g' \
+    -e 's/F77F00/#0052CC/g' \
+    {} \;
 
 # Create final image from official PHP base (Alpine 3.21 for postgresql-libs support)
 FROM php:8.2-fpm-alpine3.21

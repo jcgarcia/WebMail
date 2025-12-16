@@ -39,29 +39,10 @@ spec:
         command: ['sh', '-c']
         args:
         - |
-          # Create branding directories in persistent volume
           mkdir -p /var/lib/snappymail/custom-themes/Ingasti/images
           
-          # Create comprehensive Ingasti theme CSS
+          # Create simple CSS override for logo display
           cat > /var/lib/snappymail/custom-themes/Ingasti/styles.css << 'EOF'
-          /* Ingasti SnappyMail Theme */
-          :root {
-            --main-bg-color: #fefefe;
-            --main-bg-image: none;
-            --ingasti-primary: #0066FF;
-            --ingasti-secondary: #004E89;
-            --ingasti-accent: #0052CC;
-          }
-          html, body {
-            background-color: var(--main-bg-color) !important;
-            background-image: none !important;
-            color: #1a1a1a !important;
-          }
-          body { background: var(--main-bg-color) !important; }
-          .sp-container, .login-container, #wrapper, .body {
-            background-color: var(--main-bg-color) !important;
-            background-image: none !important;
-          }
           .sp-logo, .login-logo, [class*="logo"] {
             display: block !important;
             width: 140px;
@@ -72,42 +53,9 @@ spec:
             background-repeat: no-repeat;
             background-position: center;
           }
-          .login-form, .form-group, [class*="form"] {
-            background-color: rgba(0, 78, 137, 0.08) !important;
-            border-radius: 8px;
-            padding: 20px;
-            border: 1px solid var(--ingasti-secondary) !important;
-          }
-          input[type="text"], input[type="email"], input[type="password"], [class*="input"] {
-            background-color: #ffffff !important;
-            border: 1px solid var(--ingasti-secondary) !important;
-            color: #1a1a1a !important;
-          }
-          input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus {
-            border-color: var(--ingasti-primary) !important;
-            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1) !important;
-          }
-          button, [type="submit"], [class*="btn"] {
-            background-color: var(--ingasti-primary) !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 4px;
-            font-weight: 600;
-          }
-          button:hover, [type="submit"]:hover {
-            background-color: var(--ingasti-accent) !important;
-            box-shadow: 0 2px 8px rgba(0, 102, 255, 0.3) !important;
-          }
-          .login-title, h1, h2, h3, [class*="title"] {
-            color: var(--ingasti-secondary) !important;
-            font-weight: 600;
-          }
-          a, [class*="link"] { color: var(--ingasti-primary) !important; }
-          input[type="checkbox"] { accent-color: var(--ingasti-primary) !important; }
           EOF
           
-          # Copy logo to images directory
-          # Copy or create logo
+          # Copy logo to images directory if it exists in persistent volume
           if [ -f /var/lib/snappymail/logo.png ]; then
               cp /var/lib/snappymail/logo.png /var/lib/snappymail/custom-themes/Ingasti/images/ingasti-logo.png
           fi
@@ -131,9 +79,10 @@ spec:
               - |
                 if [ -d /var/lib/snappymail/custom-themes/Ingasti ]; then
                   if [ -f /var/lib/snappymail/custom-themes/Ingasti/styles.css ]; then
-                    cp /var/lib/snappymail/custom-themes/Ingasti/styles.css /snappymail/snappymail/v/2.38.2/themes/Default/styles.css 2>/dev/null || true
+                    # Append custom Ingasti CSS to Default theme (don't replace)
+                    cat /var/lib/snappymail/custom-themes/Ingasti/styles.css >> /snappymail/snappymail/v/2.38.2/themes/Default/styles.css 2>/dev/null || true
                   fi
-                  echo "Ingasti branding applied"
+                  echo "Ingasti branding appended"
                 fi
         volumeMounts:
         - name: snappymail-data
