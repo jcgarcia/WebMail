@@ -2,10 +2,22 @@ pipeline {
     agent any
     
     options {
-        timeout(time: 15, unit: 'MINUTES')
+        timeout(time: 60, unit: 'MINUTES')
     }
     
     stages {
+        stage('Build Docker Image') {
+            steps {
+                checkout scm
+                script {
+                    sh '''
+                        echo "Building SnappyMail Docker image..."
+                        bash build-custom-image.sh
+                    '''
+                }
+            }
+        }
+        
         stage('Deploy') {
             steps {
                 checkout scm
