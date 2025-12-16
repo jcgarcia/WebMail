@@ -64,7 +64,9 @@ RUN set -eux; \
     apk del .build-deps
 
 # Copy customized SnappyMail from customizer stage
-COPY --chown=www-data:www-data --from=customizer /tmp/snappymail /snappymail
+# The tar extracts to snappymail/v/2.38.2/..., so copy it to /snappymail/ to get /snappymail/snappymail/v/2.38.2/...
+RUN mkdir -p /snappymail
+COPY --chown=www-data:www-data --from=customizer /tmp/snappymail /snappymail/snappymail
 
 # Setup SnappyMail data directory and permissions
 RUN set -eux; \
@@ -76,7 +78,7 @@ RUN set -eux; \
     chown -R www-data:www-data /var/lib/snappymail/_data_; \
     chmod -R 700 /var/lib/snappymail/_data_; \
     # Make CSS files read-only
-    chmod 444 /snappymail/v/2.38.2/static/css/*.css*
+    chmod 444 /snappymail/snappymail/v/2.38.2/static/css/*.css*
 
 # Copy configuration files
 COPY .docker/release/files/etc/ /etc/
@@ -86,15 +88,15 @@ COPY .docker/release/files/entrypoint.sh /entrypoint.sh
 
 # Setup final permissions
 RUN set -eux; \
-    chown www-data:www-data /snappymail/v/2.38.2/include.php; \
-    chmod 440 /snappymail/v/2.38.2/include.php; \
+    chown www-data:www-data /snappymail/snappymail/v/2.38.2/include.php; \
+    chmod 440 /snappymail/snappymail/v/2.38.2/include.php; \
     chmod +x /entrypoint.sh; \
     mv -v /usr/local/etc/php-fpm.d/docker.conf /usr/local/etc/php-fpm.d/docker.conf.disabled || true; \
     mv -v /usr/local/etc/php-fpm.d/www.conf /usr/local/etc/php-fpm.d/www.conf.disabled || true; \
     mv -v /usr/local/etc/php-fpm.d/zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf.disabled || true
 
 USER root
-WORKDIR /snappymail/v/2.38.2
+WORKDIR /snappymail/snappymail/v/2.38.2
 VOLUME /var/lib/snappymail
 EXPOSE 8888
 EXPOSE 9000
