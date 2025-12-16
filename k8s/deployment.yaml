@@ -130,12 +130,10 @@ spec:
               - -c
               - |
                 if [ -d /var/lib/snappymail/custom-themes/Ingasti ]; then
-                  ln -sf /var/lib/snappymail/custom-themes/Ingasti /snappymail/snappymail/v/2.38.2/themes/Ingasti 2>/dev/null || true
                   if [ -f /var/lib/snappymail/custom-themes/Ingasti/styles.css ]; then
-                    cat /var/lib/snappymail/custom-themes/Ingasti/styles.css >> /snappymail/snappymail/v/2.38.2/themes/Default/styles.css 2>/dev/null || true
+                    cp /var/lib/snappymail/custom-themes/Ingasti/styles.css /snappymail/snappymail/v/2.38.2/themes/Default/styles.css 2>/dev/null || true
                   fi
-                  sed -i 's/theme = ".*"/theme = "Ingasti"/' /var/lib/snappymail/_data_/_default_/configs/application.ini 2>/dev/null || true
-                  echo "Ingasti theme activated"
+                  echo "Ingasti branding applied"
                 fi
         volumeMounts:
         - name: snappymail-data
