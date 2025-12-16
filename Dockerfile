@@ -80,11 +80,13 @@ RUN set -eux; \
     # Make CSS files read-only
     chmod 444 /snappymail/snappymail/v/2.38.2/static/css/*.css*
 
-# Copy configuration files
+# Copy configuration files and index.php
 COPY .docker/release/files/etc/ /etc/
 COPY .docker/release/files/usr/ /usr/
 COPY .docker/release/files/supervisor.conf /supervisor.conf
 COPY .docker/release/files/entrypoint.sh /entrypoint.sh
+COPY --chown=www-data:www-data .docker/release/files/index.php /snappymail/index.php
+COPY --chown=www-data:www-data .docker/release/files/listener.php /snappymail/listener.php
 
 # Setup final permissions
 RUN set -eux; \
