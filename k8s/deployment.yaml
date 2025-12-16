@@ -126,27 +126,13 @@ spec:
               - /bin/sh
               - -c
               - |
-                # Find and modify the main HTML file to inject CSS variables at the top of head
-                HTML_FILE="/snappymail/snappymail/v/2.38.2/index.php"
-                INJECT_CSS='<style>:root{--btn-bg-clr:#0066FF;--btn-clr:#fff;--btn-border-clr:#004E89;--btn-danger-bg-clr:#dc3545;--btn-success-bg-clr:#28a745;--folders-focused-bg-color:#333;--tab-active-bg-clr:#fff;--link-color:#0066FF}</style>'
-                
-                if [ -f "$HTML_FILE" ]; then
-                  # Check if already injected
-                  if ! grep -q "btn-bg-clr" "$HTML_FILE"; then
-                    # Insert right after <head> tag
-                    sed -i "/<head>/a\\        $INJECT_CSS" "$HTML_FILE"
-                    echo "CSS variables injected into HTML"
-                  fi
-                fi
-                
                 if [ -d /var/lib/snappymail/custom-themes/Ingasti ]; then
                   if [ -f /var/lib/snappymail/custom-themes/Ingasti/styles.css ]; then
-                    # Also update Default theme for consistency
+                    # PREPEND custom Ingasti CSS to Default theme (so variables are defined first)
                     cat /var/lib/snappymail/custom-themes/Ingasti/styles.css /snappymail/snappymail/v/2.38.2/themes/Default/styles.css > /tmp/merged.css && mv /tmp/merged.css /snappymail/snappymail/v/2.38.2/themes/Default/styles.css
                   fi
+                  echo "Ingasti branding applied"
                 fi
-                
-                echo "Ingasti branding applied"
         volumeMounts:
         - name: snappymail-data
           mountPath: /var/lib/snappymail

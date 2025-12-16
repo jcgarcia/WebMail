@@ -16,12 +16,32 @@ COPY .docker/release/files/snappymail/ /tmp/snappymail/
 
 # Apply Ingasti customizations
 COPY branding/logo.png /tmp/snappymail/v/2.38.2/assets/logo.png
-# Change colors: white to off-white, orange button to blue
-RUN find /tmp/snappymail/v/2.38.2 -name "*.css" -type f -exec sed -i \
-    -e 's/#ffffff/#fefefe/g' \
-    -e 's/FF6B35/#0066FF/g' \
-    -e 's/F77F00/#0052CC/g' \
-    {} \;
+
+# Change CSS colors - handle minified and regular CSS files
+RUN set -eux; \
+    # For regular CSS files (themes)
+    find /tmp/snappymail/v/2.38.2/themes -name "*.css" -type f -exec sed -i \
+        -e 's/#ffffff/#fefefe/g' \
+        -e 's/#fff/#0066FF/g' \
+        -e 's/FF6B35/#0066FF/g' \
+        -e 's/ff6b35/#0066FF/g' \
+        -e 's/F77F00/#0052CC/g' \
+        -e 's/f77f00/#0052CC/g' \
+        {} \;; \
+    \
+    # For minified CSS in static folder - fix button backgrounds
+    if [ -f /tmp/snappymail/v/2.38.2/static/css/app.min.css ]; then \
+        sed -i 's/var(--btn-bg-clr,#fff)/var(--btn-bg-clr,#0066FF)/g' /tmp/snappymail/v/2.38.2/static/css/app.min.css; \
+        sed -i 's/background-color:#fff/background-color:#0066FF/g' /tmp/snappymail/v/2.38.2/static/css/app.min.css; \
+        sed -i 's/background-color:#ffffff/background-color:#0066FF/g' /tmp/snappymail/v/2.38.2/static/css/app.min.css; \
+    fi; \
+    \
+    # Also handle app.css (non-minified version if it exists)
+    if [ -f /tmp/snappymail/v/2.38.2/static/css/app.css ]; then \
+        sed -i 's/var(--btn-bg-clr,#fff)/var(--btn-bg-clr,#0066FF)/g' /tmp/snappymail/v/2.38.2/static/css/app.css; \
+        sed -i 's/background-color: #fff/background-color: #0066FF/g' /tmp/snappymail/v/2.38.2/static/css/app.css; \
+        sed -i 's/background-color: #ffffff/background-color: #0066FF/g' /tmp/snappymail/v/2.38.2/static/css/app.css; \
+    fi
 
 # Create final image from official PHP base (Alpine 3.21 for postgresql-libs support)
 FROM php:8.2-fpm-alpine3.21
