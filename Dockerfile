@@ -19,9 +19,14 @@ COPY branding/logo.png /tmp/snappymail/v/2.38.2/assets/logo.png
 
 # Copy pre-modified CSS files with blue button colors
 COPY .docker/release/files/snappymail/v/2.38.2/static/css/app.min.css /tmp/snappymail/v/2.38.2/static/css/app.min.css
-COPY .docker/release/files/snappymail/v/2.38.2/static/css/app.min.css.gz /tmp/snappymail/v/2.38.2/static/css/app.min.css.gz
 COPY .docker/release/files/snappymail/v/2.38.2/static/css/app.css /tmp/snappymail/v/2.38.2/static/css/app.css
-COPY .docker/release/files/snappymail/v/2.38.2/static/css/app.css.gz /tmp/snappymail/v/2.38.2/static/css/app.css.gz
+
+# Regenerate gzipped versions of CSS files
+RUN set -eux; \
+    cd /tmp/snappymail/v/2.38.2/static/css/; \
+    gzip -f -k app.css; \
+    gzip -f -k app.min.css; \
+    echo "CSS files (uncompressed and gzipped) ready"
 
 # Change CSS colors - handle theme CSS files only (static CSS files already modified above)
 RUN set -eux; \
