@@ -11,22 +11,21 @@ RUN wget -q https://github.com/the-djmaze/snappymail/releases/download/v2.38.2/s
     tar -xzf snappymail-2.38.2.tar.gz && \
     rm snappymail-2.38.2.tar.gz
 
+# Fix CSS: Remove LoginView button background override to show blue color
+RUN set -eux; \
+    sed -i 's/.LoginView .btn,.LoginView input{background:0 0;/.LoginView input{background:0 0;/g' \
+        /tmp/snappymail/v/2.38.2/static/css/app.css; \
+    # Regenerate gzipped versions
+    cd /tmp/snappymail/v/2.38.2/static/css/; \
+    gzip -f -c app.css > app.css.gz; \
+    gzip -f -c app.min.css > app.min.css.gz; \
+    echo "CSS files fixed and gzipped"
+
 # Apply custom files (overwrite tar extraction)
 COPY .docker/release/files/snappymail/ /tmp/snappymail/
 
 # Apply Ingasti customizations
 COPY branding/logo.png /tmp/snappymail/v/2.38.2/assets/logo.png
-
-# Copy pre-modified CSS files with blue button colors
-COPY .docker/release/files/snappymail/v/2.38.2/static/css/app.min.css /tmp/snappymail/v/2.38.2/static/css/app.min.css
-COPY .docker/release/files/snappymail/v/2.38.2/static/css/app.css /tmp/snappymail/v/2.38.2/static/css/app.css
-
-# Regenerate gzipped versions of CSS files
-RUN set -eux; \
-    cd /tmp/snappymail/v/2.38.2/static/css/; \
-    gzip -f -k app.css; \
-    gzip -f -k app.min.css; \
-    echo "CSS files (uncompressed and gzipped) ready"
 
 # Change CSS colors - handle theme CSS files only (static CSS files already modified above)
 RUN set -eux; \
