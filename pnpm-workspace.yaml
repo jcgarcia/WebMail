@@ -1,0 +1,4 @@
+packages:
+  - 'k8s'
+  - 'snappymail'
+
