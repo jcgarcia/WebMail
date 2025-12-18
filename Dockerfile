@@ -35,6 +35,9 @@ RUN set -eux; \
 RUN mkdir -p /snappymail/snappymail
 COPY --chown=www-data:www-data snappymail/v /snappymail/snappymail/v
 
+# Copy custom include.php with correct data path
+COPY --chown=www-data:www-data .docker/release/files/snappymail/include.php /snappymail/snappymail/v/2.38.2/include.php
+
 # Setup SnappyMail data directory and permissions
 RUN set -eux; \
     mkdir -p /var/lib/snappymail; \
