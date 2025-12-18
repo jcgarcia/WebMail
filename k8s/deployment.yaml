@@ -44,8 +44,8 @@ spec:
     spec:
       containers:
       - name: snappymail
-        image: jasonmun/snappymail:latest
-        imagePullPolicy: IfNotPresent
+        image: ghcr.io/ingasti/snappymail:branding
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
         volumeMounts:
