@@ -52,7 +52,7 @@ spec:
         - containerPort: 80
         volumeMounts:
         - name: data
-          mountPath: /var/snappymail/data
+          mountPath: /var/lib/snappymail
       volumes:
       - name: data
         persistentVolumeClaim:
