@@ -63,32 +63,17 @@
 	--link-hover-color: #1565C0;
 }
 
-/* Login page layout - position logo above form */
-#rl-content > .content {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	min-height: 100vh;
-	padding: 20px;
-	padding-top: 240px; /* Space for logo */
-	position: relative;
-}
-
-/* Logo positioned absolutely at top of login screen */
-#rl-content > .content::before {
+/* Add logo before the login form */
+.LoginView::before {
 	content: "";
-	position: absolute;
-	top: 20px;
-	left: 50%;
-	transform: translateX(-50%);
+	display: block;
 	width: 200px;
 	height: 200px;
-	background-image: var(--login-logo);
+	background-image: url("/snappymail/v/2.38.2/themes/Ingasti/images/logo.png");
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: center;
-	z-index: 1;
+	margin: 0 auto 20px;
 }
 
 /* Logo BEFORE the "webmail Interface" title on loading screen */
