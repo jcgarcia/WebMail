@@ -1,0 +1,91 @@
+:root {
+	color-scheme: light;
+
+	/* MAIN */
+	--main-color: #333;
+	--main-bg-color: #fefefe;
+	--main-bg-image: none;
+
+	/* LOADING */
+	--loading-color: #6D4C41;
+	--loading-text-shadow: none;
+
+	/* LOGIN */
+	--login-color: #333;
+	--login-bg-color: rgba(255,255,255,0.95);
+	--login-box-shadow: 0px 4px 20px rgba(109,76,65,0.3);
+	--login-border: 2px solid #6D4C41;
+	--login-border-radius: 8px;
+	--login-logo: url("images/logo.png");
+	--login-logo-width: 200px;
+	--login-logo-height: 200px;
+
+	/* MENU */
+	--dropdown-menu-color: #333;
+	--dropdown-menu-bg-color: #fff;
+	--dropdown-menu-hover-bg-color: #1E88E5;
+	--dropdown-menu-hover-color: #fff;
+	--dropdown-menu-disable-color: #999;
+
+	/* FOLDERS */
+	--folders-color: #333;
+	--folders-disabled-color: #aaa;
+	--folders-selected-color: #fff;
+	--folders-selected-bg-color: #1E88E5;
+	--folders-focused-color: #fff;
+	--folders-focused-bg-color: #6D4C41;
+	--folders-hover-color: #333;
+	--folders-hover-bg-color: #FDD835;
+	--folders-drop-color: #fff;
+	--folders-drop-bg-color: #43A047;
+
+	/* SETTINGS */
+	--settings-menu-color: #333;
+	--settings-menu-selected-color: #fff;
+	--settings-menu-selected-bg-color: #6D4C41;
+	--settings-menu-hover-color: #333;
+	--settings-menu-hover-bg-color: #FDD835;
+
+	/* MESSAGE LIST */
+	--message-list-toolbar-bg-color: #fefefe;
+	--message-list-item-hover-bg-color: #f5f5f5;
+	--message-list-item-selected-bg-color: #e8f4fd;
+	
+	/* BUTTONS */
+	--btn-primary-bg-color: #1E88E5;
+	--btn-primary-hover-bg-color: #1565C0;
+	--btn-success-bg-color: #43A047;
+	--btn-warning-bg-color: #FB8C00;
+	--btn-danger-bg-color: #E53935;
+
+	/* LINKS */
+	--link-color: #1E88E5;
+	--link-hover-color: #1565C0;
+}
+
+/* Login screen logo */
+#rl-loading::before,
+#rl-content > .content > article > header::before {
+	content: "";
+	display: block;
+	width: var(--login-logo-width);
+	height: var(--login-logo-height);
+	background-image: var(--login-logo);
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	margin: 0 auto 20px;
+}
+
+/* Hide default "webmail Interface" text */
+#rl-content > .content > article > header > h1 {
+	display: none;
+}
+
+/* Style the login form */
+.loginForm {
+	background-color: var(--login-bg-color);
+	border: var(--login-border);
+	border-radius: var(--login-border-radius);
+	box-shadow: var(--login-box-shadow);
+}
