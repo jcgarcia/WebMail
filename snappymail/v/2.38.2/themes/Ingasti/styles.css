@@ -63,8 +63,8 @@
 	--link-hover-color: #1565C0;
 }
 
-/* Add logo before the login form */
-.LoginView::before {
+/* Add logo at the top of the login form */
+.LoginView form::before {
 	content: "";
 	display: block;
 	width: 200px;
@@ -73,7 +73,9 @@
 	background-size: contain;
 	background-repeat: no-repeat;
 	background-position: center;
-	margin: 0 auto 20px;
+	margin: -20px auto 20px;
+	position: relative;
+	z-index: 10;
 }
 
 /* Logo BEFORE the "webmail Interface" title on loading screen */
