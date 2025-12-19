@@ -1,0 +1,44 @@
+/* Ingasti Branding - Always loaded */
+
+/* Logo on login page - position above form */
+#rl-content > .content {
+	padding-top: 40px;
+}
+
+#rl-content > .content > article > header {
+	position: relative;
+	margin-bottom: 240px !important;
+	min-height: 220px;
+}
+
+#rl-content > .content > article > header::before {
+	content: "";
+	display: block;
+	width: 200px;
+	height: 200px;
+	background-image: url('/snappymail/v/2.38.2/themes/Ingasti/images/logo.png');
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center top;
+	position: absolute;
+	top: -220px;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 1000;
+}
+
+/* Hide "webmail Interface" text */
+#rl-content > .content > article > header > h1 {
+	opacity: 0;
+	height: 0;
+	margin: 0;
+	overflow: hidden;
+}
+
+/* Ensure login form doesn't overlap */
+.loginForm,
+#rl-content > .content > article > form {
+	position: relative;
+	z-index: 1;
+	margin-top: 20px;
+}

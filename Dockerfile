@@ -53,7 +53,11 @@ RUN set -eux; \
 # Apply Ingasti branding
 COPY --chown=www-data:www-data branding/logo.png /snappymail/snappymail/v/2.38.2/static/images/ingasti-logo.png
 COPY --chown=www-data:www-data branding/custom.css /snappymail/snappymail/v/2.38.2/static/css/custom.css
-RUN chmod 644 /snappymail/snappymail/v/2.38.2/static/css/custom.css
+COPY --chown=www-data:www-data branding/custom-login.css /snappymail/snappymail/v/2.38.2/static/css/custom-login.css
+RUN set -eux; \
+    chmod 644 /snappymail/snappymail/v/2.38.2/static/css/custom.css; \
+    chmod 644 /snappymail/snappymail/v/2.38.2/static/css/custom-login.css; \
+    echo '@import url("custom-login.css");' >> /snappymail/snappymail/v/2.38.2/static/css/boot.css
 
 # Copy configuration files and index.php
 COPY .docker/release/files/etc/ /etc/
