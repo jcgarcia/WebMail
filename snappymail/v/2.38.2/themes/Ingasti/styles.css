@@ -33,18 +33,18 @@
 	--folders-selected-color: #fff;
 	--folders-selected-bg-color: #1E88E5;
 	--folders-focused-color: #fff;
-	--folders-focused-bg-color: #6D4C41;
-	--folders-hover-color: #333;
-	--folders-hover-bg-color: #FDD835;
+	--folders-focused-bg-color: #1E88E5;
+	--folders-hover-color: #fff;
+	--folders-hover-bg-color: #43A047;
 	--folders-drop-color: #fff;
 	--folders-drop-bg-color: #43A047;
 
 	/* SETTINGS */
 	--settings-menu-color: #333;
 	--settings-menu-selected-color: #fff;
-	--settings-menu-selected-bg-color: #6D4C41;
-	--settings-menu-hover-color: #333;
-	--settings-menu-hover-bg-color: #FDD835;
+	--settings-menu-selected-bg-color: #1E88E5;
+	--settings-menu-hover-color: #fff;
+	--settings-menu-hover-bg-color: #43A047;
 
 	/* MESSAGE LIST */
 	--message-list-toolbar-bg-color: #fefefe;
