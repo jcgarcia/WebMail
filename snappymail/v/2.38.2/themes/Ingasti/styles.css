@@ -71,11 +71,28 @@
 	justify-content: center;
 	min-height: 100vh;
 	padding: 20px;
+	padding-top: 240px; /* Space for logo */
+	position: relative;
 }
 
-/* Logo BEFORE the "webmail Interface" title on BOTH loading and login screens */
-#rl-loading > h1::before,
-#rl-content > .content > article > header > h1::before {
+/* Logo positioned absolutely at top of login screen */
+#rl-content > .content::before {
+	content: "";
+	position: absolute;
+	top: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 200px;
+	height: 200px;
+	background-image: var(--login-logo);
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	z-index: 1;
+}
+
+/* Logo BEFORE the "webmail Interface" title on loading screen */
+#rl-loading > h1::before {
 	content: "";
 	display: block;
 	width: 200px;
