@@ -49,7 +49,7 @@ spec:
         image: ghcr.io/ingasti/snappymail:branding
         imagePullPolicy: Always
         ports:
-        - containerPort: 80
+        - containerPort: 8888
         volumeMounts:
         - name: data
           mountPath: /var/lib/snappymail
@@ -70,4 +70,4 @@ spec:
     app: snappymail
   ports:
     - port: 80
-      targetPort: 80
+      targetPort: 8888
