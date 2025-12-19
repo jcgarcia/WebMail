@@ -48,9 +48,12 @@ RUN set -eux; \
     chmod -R 700 /var/lib/snappymail; \
     mkdir -p /var/lib/snappymail/_data_/_default_/{cache,configs,domains,plugins,storage}; \
     chown -R www-data:www-data /var/lib/snappymail/_data_; \
-    chmod -R 700 /var/lib/snappymail/_data_; \
-    # Make CSS files read-only
-    chmod 444 /snappymail/snappymail/v/2.38.2/static/css/*.css* || true
+    chmod -R 700 /var/lib/snappymail/_data_
+
+# Apply Ingasti branding
+COPY --chown=www-data:www-data branding/logo.png /snappymail/snappymail/v/2.38.2/static/images/ingasti-logo.png
+COPY --chown=www-data:www-data branding/custom.css /snappymail/snappymail/v/2.38.2/static/css/custom.css
+RUN chmod 644 /snappymail/snappymail/v/2.38.2/static/css/custom.css
 
 # Copy configuration files and index.php
 COPY .docker/release/files/etc/ /etc/

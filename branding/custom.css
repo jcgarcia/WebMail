@@ -1,0 +1,106 @@
+/* Ingasti WebMail Branding - Custom Styles */
+
+:root {
+    /* Ingasti Color Palette */
+    --ingasti-brown: #6D4C41;
+    --ingasti-red: #E53935;
+    --ingasti-orange: #FB8C00;
+    --ingasti-yellow: #FDD835;
+    --ingasti-green: #43A047;
+    --ingasti-cyan: #00ACC1;
+    --ingasti-blue: #1E88E5;
+    --ingasti-bg: #fefefe;
+    
+    /* Override SnappyMail variables */
+    --main-bg-color: var(--ingasti-bg);
+    --main-color: var(--ingasti-brown);
+    --link-color: var(--ingasti-blue);
+    
+    /* Login screen */
+    --login-bg-color: rgba(109, 76, 65, 0.9);
+    --login-color: rgba(255, 255, 255, 0.95);
+    --login-border: 1px solid rgba(251, 140, 0, 0.3);
+    --spinner-color: var(--ingasti-orange);
+    
+    /* Buttons */
+    --btn-success-bg-clr: var(--ingasti-green);
+    --btn-danger-bg-clr: var(--ingasti-red);
+    
+    /* Folders */
+    --folders-color: var(--ingasti-brown);
+    --folders-hover-bg-color: var(--ingasti-blue);
+    --folders-hover-color: #fff;
+    --folders-selected-bg-color: var(--ingasti-blue);
+    --folders-selected-color: #fff;
+    
+    /* Remove background pattern */
+    --main-bg-image: none !important;
+}
+
+/* Remove any background patterns globally */
+#rl-app {
+    background-image: none !important;
+    background-color: var(--ingasti-bg) !important;
+}
+
+/* Login screen customization */
+.LoginView {
+    background-image: none !important;
+}
+
+.LoginView form {
+    background-color: var(--login-bg-color) !important;
+    border: var(--login-border) !important;
+}
+
+/* Custom logo in login screen */
+.LoginView .descWrapper {
+    background: url('/snappymail/v/2.38.2/static/images/ingasti-logo.png') no-repeat center;
+    background-size: contain;
+    height: 120px;
+    text-indent: -9999px;
+    overflow: hidden;
+}
+
+/* Accent colors for UI elements */
+.btn-warning {
+    background-color: var(--ingasti-orange) !important;
+}
+
+/* Message list focused item */
+.messageListItem.focused {
+    border-left-color: var(--ingasti-blue) !important;
+}
+
+.messageListItem.unseen {
+    border-left-color: var(--ingasti-orange) !important;
+}
+
+/* Unread count badge */
+.b-folders a[data-unread]::after {
+    background-color: var(--ingasti-orange) !important;
+}
+
+/* Flag colors */
+.b-folders .is-flagged .flag-icon::after,
+.messageListItem .flagParent::after {
+    color: var(--ingasti-orange) !important;
+}
+
+/* Settings menu active item */
+#rl-left nav a.selected {
+    background-color: var(--ingasti-blue) !important;
+}
+
+/* Clean background - no patterns */
+.b-folders .move-action-content-wrapper {
+    background-image: none !important;
+    background-color: transparent !important;
+}
+
+/* Dropdown hover */
+.dropdown-menu li:not(.disabled)>a:focus,
+.dropdown-menu li:not(.disabled)>a:hover {
+    background-color: var(--ingasti-blue) !important;
+    color: #fff !important;
+}

@@ -77,3 +77,6 @@ body#rl-app {
 	height: 1em;
 	width: 1em;
 }
+
+/* Ingasti custom branding */
+@import url('custom.css');
