@@ -14,14 +14,14 @@ metadata:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: snappymail-data
+  name: snappymail-pvc
   namespace: webmail
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 256Mi
+      storage: 1Gi
   storageClassName: local-path
 
 ---
@@ -56,7 +56,7 @@ spec:
       volumes:
       - name: data
         persistentVolumeClaim:
-          claimName: snappymail-data
+          claimName: snappymail-pvc
 
 ---
 apiVersion: v1
