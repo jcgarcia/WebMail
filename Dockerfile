@@ -32,7 +32,7 @@ RUN set -eux; \
 # Copy SnappyMail from repo (pre-extracted and CSS fixed)
 # The repo structure is: snappymail/v/2.38.2/...
 # We need it at: /snappymail/snappymail/v/2.38.2/... (for index.php to find it)
-RUN mkdir -p /snappymail/snappymail
+RUN mkdir -p /snappymail/snappymail && chown -R www-data:www-data /snappymail
 COPY --chown=www-data:www-data snappymail/v /snappymail/snappymail/v
 
 # Copy custom include.php with correct data path
